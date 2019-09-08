@@ -1,0 +1,75 @@
+---
+title: "str~testscr"
+author: Brian
+date: 2019
+output: pdf_document
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+tinytex::install_tinytex()
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+setwd("/Users/Brian/desktop/R/lab1")
+csdata <- read.csv("dataSTR.csv")
+head(csdata)
+tail(csdata)
+summary(csdata)
+```
+# create a subset of the original dataset
+```{r}
+cssub <- subset(csdata, select=c("testscr","str"))
+summary(cssub)
+require(ggplot2)
+```
+# visualize the data in R, here we are trying to find the relationship b/w testscr(testscore) and str(student to teach ratio)
+```{r}
+qplot(testscr, data=cssub, bins=35)
+ggsave("testscr_plot.pdf")
+```
+```{r}
+qplot(str, data=cssub, bins=35)
+ggsave("str_plot.pdf")
+```
+#plot tow variables together , form a scatterplot
+```{r}
+qplot(str, testscr, data=cssub)
+ggsave("str_testscr_scatterplot.pdf")
+```
+# fitting a straight line in the scatterplot
+```{r}
+ggplot(cssub, aes(str, testscr))+geom_point()+geom_smooth(method="lm")
+```
+#Fit a line, linear~regression model
+```{r}
+Lm <- lm(testscr~str, data=cssub)
+summary(Lm)
+```
+# Conclusion:
+# Using this model, we find that:
+# 1. increasing the student-teacher-ratio...
+#    ceteris paribus, reduces the performance in terms of
+#    the average 5th grade test score.
+# 2. Our best estimate is that, if str increases by one,
+#    we expect performance to fall by -2.2.
+#    Remember that test scores were between 600 and 700.
+#
+# Remember:
+# 3. We have no idea where these numbers come from
+# 4. We did not involve any other variables
+# 5. We have assumed linearity (and a lot more!)
+
+
+
+
