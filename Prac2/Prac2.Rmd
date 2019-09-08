@@ -1,0 +1,143 @@
+---
+title: "prac2"
+author: "Brian Ma"
+date: "N/A"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+setwd("/Users/Brian/desktop/R/lab2")
+data <- read.csv("cps92_08.csv")
+summary(data)
+```
+```{r}
+require(ggplot2)
+data_ahe <- density(data$ahe)
+plot(data_ahe)
+ggsave("ahe_pdf.pdf")
+```
+```{r}
+plot.ecdf(data$ahe)
+ggsave("ahe_ecdf.pdf")
+```
+```{r}
+data_year <- density(data$year)
+plot(data_year)
+ggsave("year_density.pdf")
+```
+```{r}
+plot.ecdf(data$year)
+ggsave("year_cdf.pdf")
+```
+# By oberserving the density function, we know that "ahe" is continuously dis tributed, while "year" is a discrete variable. 
+# (above are the graph of Probability distribution function & Cumulative distribution function )
+```{r}
+summary(data$ahe)
+sd(data$ahe)
+```
+```{r}
+newdata92 <- subset(data, year == 1992)
+newdata08 <- subset(data, year == 2008)
+data_ahe_92 <- density(newdata92$ahe)
+plot(data_ahe_92)
+ggsave("ahe_92_density.pdf")
+```
+```{r}
+plot.ecdf(newdata92$ahe)
+ggsave("ahe_cdf_92.pdf")
+```
+```{r}
+data_year_92 <- density(newdata92$year)
+plot(data_year_92)
+ggsave("92_pdf_year.pdf")
+```
+```{r}
+plot.ecdf(newdata92$year)
+ggsave("year_92_cdf.pdf")
+```
+```{r}
+data_ahe_08 <- density(newdata08$ahe)
+plot(data_ahe_08)
+ggsave("pdf_ahe_08.pdf")
+```
+```{r}
+plot.ecdf(newdata08$ahe)
+ggsave("ahe_cdf_08.pdf")
+```
+```{r}
+data_year_08 <- density(newdata08$year)
+plot(data_year_08)
+ggsave("pdf_year_08.pdf")
+```
+```{r}
+plot.ecdf(newdata08$year)
+ggsave("year_08_cdf.pdf")
+```
+# We cannot directly compare earnings in 1992 and 2008 because they are nomin al values, and doesn't reflect real earnigs.Inflations rate, CPI in 1992 = 140.3, 2018 =215.2
+```{r}
+adj_ahe <-newdata92$ahe/140.3*215.2
+sd(adj_ahe)
+```
+```{r}
+data_adjahe <- density(adj_ahe)
+plot(data_adjahe)
+plot.ecdf(adj_ahe)
+```
+```{r}
+data_year_adjahe <- density(newdata92$year)
+plot(data_year_adjahe)
+plot.ecdf(newdata92$year)
+```
+# the difference between the average earnings in 2008 and 1992 (measured in 2008 dollars)
+```{r}
+Diff_bw_ahe_in_2008_1992 = mean(newdata08$ahe) - mean(adj_ahe)
+Diff_bw_ahe_in_2008_1992
+```
+#account for the education level of the workers.
+# Compute D_hs the difference between the average earnings in2008 and
+#1992 (measured in 2008 dollars) for high school graduates.
+# ComputeD_cthedifferencebetweentheaverageearningsin2008and
+#1992 (measured in 2008 dollars) for college graduates.
+# Compute g92 the gap between earnings of college and high school
+#graduates in 1992 (measured in 2008 dollars).
+# Computeg g08 the gap between earnings of college and high school
+#graduates in 2008 (measured in 2008 dollars).
+```{r}
+newdata92hs <- subset(newdata92, bachelor == 0)
+newdata92c <- subset(newdata92, bachelor == 1)
+newdata08hs <- subset(newdata08, bachelor == 0)
+newdata08c <- subset(newdata08, bachelor == 1)
+D_hs <- mean(newdata92hs$ahe) - mean(newdata08hs$ahe)
+D_c <- mean(newdata92c$ahe) - mean(newdata08c$ahe)
+g92 <- mean(newdata92c$ahe) - mean(newdata92hs$ahe) 
+g08 <- mean(newdata08c$ahe) - mean(newdata08hs$ahe)
+
+D_hs
+D_c
+g92
+g08
+```
+
